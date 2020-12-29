@@ -1,0 +1,40 @@
+$left-width: 70vw;
+$top-height: 50vh;
+.App {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  .HeaderContainer {
+  }
+  .NodeViewContainer {
+    position: absolute;
+    left: 0;
+    right: calc(100vw - #{$left-width});
+    top: 0;
+    bottom: 0;
+    padding: 10px;
+    box-shadow: 0 0 10px rgb(204, 204, 204);
+  }
+  .RecommendViewContainer {
+    position: absolute;
+    left: $left-width;
+    right: 0;
+    top: 0;
+    bottom: $top-height;
+    padding: 10px;
+    box-shadow: 0 0 10px rgb(204, 204, 204);
+    overflow-y: auto;
+  }
+  .DetailViewContainer {
+    position: absolute;
+    left: $left-width;
+    right: 0;
+    bottom: 0;
+    top: $top-height;
+    padding: 10px;
+    box-shadow: 0 0 10px rgb(204, 204, 204);
+    overflow-y: auto;
+  }
+}
