@@ -85,6 +85,7 @@ const NodeView = React.memo(({ data, setSelectedNode }) => {
     .on("click", (e, d) => {
       // console.log("d", d);
       setSelectedNode(d);
+      e.stopPropagation();
       handleClick(d);
     })
     .call(drag(simulation));
@@ -94,8 +95,17 @@ const NodeView = React.memo(({ data, setSelectedNode }) => {
     d3.selectAll("circle").attr("opacity", (d) =>
       highlightSet.has(d.id) ? 1 : 0.2
     );
+    d3.selectAll("circle").attr("stroke", (dd) =>
+      dd.id == d.id ? "#f03b20" : null
+    );
+    d3.selectAll("circle").attr("stroke-width", (dd) =>
+      dd.id == d.id ? 2.4 : null
+    );
     d3.selectAll("line").attr("stroke-opacity", (dd) =>
-      dd.source.id == d.id || dd.target.id == d.id ? 0.6 : 0.1
+      // dd.source.id == d.id || dd.target.id == d.id ? 0.6 : 0.1
+      highlightSet.has(dd.source.id) && highlightSet.has(dd.target.id)
+        ? 0.6
+        : 0.1
     );
   };
   simulation.on("tick", () => {
@@ -107,9 +117,23 @@ const NodeView = React.memo(({ data, setSelectedNode }) => {
     node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
   });
 
+  const clickBackGround = () => {
+    d3.selectAll("circle").attr("opacity", 1
+    );
+    d3.selectAll("circle").attr("stroke", null
+    );
+    d3.selectAll("circle").attr("stroke-width", 1.5);
+    d3.selectAll("line").attr("stroke-opacity", 0.6);
+  };
+
   return (
     <div className="NodeView">
-      <svg width="100%" height="100%" id="node-view-svg" />
+      <svg
+        width="100%"
+        height="100%"
+        id="node-view-svg"
+        onClick={clickBackGround}
+      />
     </div>
   );
 });

@@ -12,23 +12,36 @@ function App() {
   });
   useEffect(() => {
     const getData = async () => {
-      let nodes = await d3.json("[20201228]survey_nodes.json");
+      // let nodes = await d3.json("[20201228]survey_nodes.json");
+      let nodes = await d3.json("[20210105]survey_nodes.json");
       nodes = nodes.filter(
-        (node) => node.type === "in_survey" || node.cited_list.length > 3
+        (node) =>
+          node.type === "in_survey" ||
+          node.cited_count >= 4 ||
+          node.cite_count >= 4
       );
       const nodeSet = new Set(nodes.map((node) => node.id));
       const links = [];
       nodes.forEach((node) => {
-        if (node.type === "in_survey") {
-          node.cite_list.forEach(
-            (cite_doi) =>
-              nodeSet.has(cite_doi) &&
-              links.push({
-                source: node.id,
-                target: cite_doi,
-              })
-          );
-        }
+        // if (node.type === "in_survey") {
+        //   node.cite_list.forEach(
+        //     (cite_doi) =>
+        //       nodeSet.has(cite_doi) &&
+        //       links.push({
+        //         source: node.id,
+        //         target: cite_doi,
+        //       })
+        //   );
+        // }
+        node.cite_list.forEach(
+          (cite_doi) =>
+            nodeSet.has(cite_doi) &&
+            links.push({
+              source: node.id,
+              target: cite_doi,
+            })
+        );
+        node['type'] = node.type === "in_survey" ? "survey" : (node.cited_count > node.cite_count)
       });
       setData({
         nodes,
