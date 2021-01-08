@@ -8,6 +8,26 @@ $top-height: 50vh;
   bottom: 0;
   .HeaderContainer {
   }
+  .ControlPanel {
+    position: absolute;
+    // left: 20px;
+    right: calc(100vw - #{$left-width});
+    top: 20px;
+    width: 140px;
+    margin-right: 20px;
+    .panelItem {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      .panelItem-title {
+        font-size: 10px;
+      }
+      .panelItem-component {
+        width: 50px;
+      }
+    }
+  }
   .NodeViewContainer {
     position: absolute;
     left: 0;

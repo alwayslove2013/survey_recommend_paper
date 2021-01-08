@@ -4,12 +4,15 @@ import DetailView from "./Views/DetailView";
 import RecommendView from "./Views/RecommendView";
 import * as d3 from "d3";
 import React, { useState, useEffect } from "react";
+import { InputNumber } from "antd";
 
 function App() {
   const [data, setData] = useState({
     nodes: [],
     links: [],
   });
+  const [citeCount, setCiteCount] = useState(4);
+  const [citedCount, setCitedCount] = useState(4);
   useEffect(() => {
     const getData = async () => {
       // let nodes = await d3.json("[20201228]survey_nodes.json");
@@ -17,8 +20,8 @@ function App() {
       nodes = nodes.filter(
         (node) =>
           node.type === "in_survey" ||
-          node.cited_count >= 4 ||
-          node.cite_count >= 4
+          node.cited_count >= citeCount ||
+          node.cite_count >= citedCount
       );
       const nodeSet = new Set(nodes.map((node) => node.id));
       const links = [];
@@ -41,7 +44,10 @@ function App() {
               target: cite_doi,
             })
         );
-        node['type'] = node.type === "in_survey" ? "survey" : (node.cited_count > node.cite_count)
+        node["type"] =
+          node.type === "in_survey"
+            ? "survey"
+            : node.cited_count > node.cite_count;
       });
       setData({
         nodes,
@@ -49,7 +55,7 @@ function App() {
       });
     };
     getData();
-  }, []);
+  }, [citeCount, citedCount]);
   const [selectedNode, setSelectedNode] = useState({});
   console.log("select", selectedNode);
   const cite_node_list = data.nodes.filter(
@@ -71,6 +77,34 @@ function App() {
       </div>
       <div className="DetailViewContainer">
         <DetailView selectedNode={selectedNode} />
+      </div>
+      <div className="ControlPanel">
+        <div className="panelItem">
+          <div className="panelItem-title">cite count &ge;</div>
+          <div className="panelItem-component">
+            <InputNumber
+              min={1}
+              max={10}
+              style={{ width: 50}}
+              defaultValue={citeCount}
+              onChange={setCiteCount}
+              size="small"
+            />
+          </div>
+        </div>
+        <div className="panelItem">
+          <div className="panelItem-title">cited count &ge; </div>
+          <div className="panelItem-component">
+            <InputNumber
+              min={1}
+              max={10}
+              style={{ width: 50}}
+              defaultValue={citedCount}
+              onChange={setCitedCount}
+              size="small"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
